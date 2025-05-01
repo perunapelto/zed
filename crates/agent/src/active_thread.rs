@@ -1867,6 +1867,11 @@ impl ActiveThread {
                 .into_any_element(),
         };
 
+        let open_feedback_editor_and_focus_handle = self
+            .open_feedback_editors
+            .get(&message_id)
+            .map(|feedback_editor| (feedback_editor, feedback_editor.focus_handle(cx)));
+
         let message_is_empty = message.should_display_content();
         let has_content = !message_is_empty || !added_context.is_empty();
 
@@ -2113,11 +2118,10 @@ impl ActiveThread {
                         .child(generating_label.unwrap()),
                 )
             })
-            .when(show_feedback, move |parent| {
+            .when(show_feedback, |parent| {
                 parent.child(feedback_items).when_some(
-                    self.open_feedback_editors.get(&message_id),
-                    move |parent, feedback_editor| {
-                        let focus_handle = feedback_editor.focus_handle(cx);
+                    open_feedback_editor_and_focus_handle,
+                    |parent, (feedback_editor, focus_handle)| {
                         parent.child(
                             v_flex()
                                 .key_context("AgentFeedbackMessageEditor")
@@ -2194,12 +2198,18 @@ impl ActiveThread {
                 // Backdrop to dim out the whole thread below the editing user message
                 parent.relative().child(
                     div()
+                        .id("editing-backdrop")
                         .occlude()
                         .absolute()
                         .inset_0()
                         .size_full()
                         .bg(panel_background)
-                        .opacity(0.8),
+                        .opacity(0.8)
+                        .on_click(cx.listener(move |this, _, window, cx| {
+                            dbg!("clicked");
+                            this.cancel_editing_message(&menu::Cancel, window, cx);
+                            cx.stop_propagation();
+                        })),
                 )
             })
             .into_any()
