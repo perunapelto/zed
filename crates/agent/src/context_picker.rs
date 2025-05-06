@@ -381,6 +381,29 @@ impl ContextPicker {
         cx.focus_self(window);
     }
 
+    pub fn select_first(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        match &self.mode {
+            ContextPickerState::Default(entity) => entity.update(cx, |entity, cx| {
+                entity.select_first(&Default::default(), window, cx)
+            }),
+            ContextPickerState::File(entity) => {
+                entity.update(cx, |entity, cx| entity.select_first(window, cx));
+            }
+            ContextPickerState::Symbol(entity) => {
+                entity.update(cx, |entity, cx| entity.select_first(window, cx));
+            }
+            ContextPickerState::Fetch(entity) => {
+                entity.update(cx, |entity, cx| entity.select_first(window, cx));
+            }
+            ContextPickerState::Thread(entity) => {
+                entity.update(cx, |entity, cx| entity.select_first(window, cx));
+            }
+            ContextPickerState::Rules(entity) => {
+                entity.update(cx, |entity, cx| entity.select_first(window, cx));
+            }
+        }
+    }
+
     fn recent_menu_item(
         &self,
         context_picker: Entity<ContextPicker>,

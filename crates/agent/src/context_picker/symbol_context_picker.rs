@@ -35,6 +35,12 @@ impl SymbolContextPicker {
 
         Self { picker }
     }
+
+    pub fn select_first(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.picker.update(cx, |picker, cx| {
+            picker.select_first(&Default::default(), window, cx);
+        })
+    }
 }
 
 impl Focusable for SymbolContextPicker {
