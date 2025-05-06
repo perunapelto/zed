@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{rc::Rc, sync::Arc};
 
 use collections::{HashSet, IndexMap};
 use feature_flags::{Assistant2FeatureFlag, ZedProFeatureFlag};
@@ -290,10 +290,25 @@ where
         let language_model_selector = self.language_model_selector.clone();
 
         PopoverMenu::new("model-switcher")
-            .menu(move |_window, _cx| Some(language_model_selector.clone()))
+            .menu({
+                let language_model_selector = language_model_selector.clone();
+                move |_window, _cx| Some(language_model_selector.clone())
+            })
             .trigger_with_tooltip(self.trigger, self.tooltip)
             .anchor(self.anchor)
             .when_some(self.handle.clone(), |menu, handle| menu.with_handle(handle))
+            .on_open({
+                let language_model_selector = language_model_selector.downgrade();
+                Rc::new(move |window, cx| {
+                    language_model_selector
+                        .update(cx, |language_model_selector, cx| {
+                            language_model_selector.picker.update(cx, |picker, cx| {
+                                picker.select_first(&Default::default(), window, cx);
+                            })
+                        })
+                        .ok();
+                })
+            })
             .offset(gpui::Point {
                 x: px(0.0),
                 y: px(-2.0),
