@@ -749,9 +749,9 @@ impl ContextMenu {
         if item.is_selectable() {
             self.selected_index = Some(ix);
             if let ContextMenuItem::Entry(entry) = item {
-                if let Some(callback) = &entry.documentation_aside {
-                    self.documentation_aside = Some((ix, callback.clone()));
-                }
+                // if let Some(callback) = &entry.documentation_aside {
+                //     self.documentation_aside = Some((ix, callback.clone()));
+                // }
                 if self.eager && !entry.disabled {
                     (entry.handler)(context, window, cx)
                 }

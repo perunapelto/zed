@@ -66,7 +66,7 @@ impl ProfileSelector {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) -> Entity<ContextMenu> {
-        ContextMenu::build(window, cx, |mut menu, _window, cx| {
+        ContextMenu::build(window, cx, |mut menu, window, cx| {
             let settings = AssistantSettings::get_global(cx);
             for (profile_id, profile) in self.profiles.builtin.iter() {
                 menu =
@@ -90,6 +90,8 @@ impl ProfileSelector {
                     window.dispatch_action(ManageProfiles::default().boxed_clone(), cx);
                 },
             ));
+
+            menu.select_first(&Default::default(), window, cx);
 
             menu
         })
