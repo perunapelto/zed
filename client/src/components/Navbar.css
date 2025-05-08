@@ -1,0 +1,17 @@
+.navbar {
+  background: #222;
+  color: #ffd700;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+.logo-text {
+  margin-left: 0.5rem;
+  letter-spacing: 1px;
+}

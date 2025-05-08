@@ -1,0 +1,22 @@
+.home {
+  padding: 2rem;
+  text-align: center;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.tool-card {
+  background: #fffbe6;
+  border: 1px solid #ffd700;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: #222;
+  transition: box-shadow 0.2s;
+}
+.tool-card:hover {
+  box-shadow: 0 2px 12px #ffd70055;
+}
